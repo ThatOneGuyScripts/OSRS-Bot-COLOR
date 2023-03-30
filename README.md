@@ -1,4 +1,4 @@
-#This is a beta test for remote input / multi client
+# This is a beta test for remote input / multi client
 
 # MUST Haves to make work
 1. 32 bit python 3.10.xx
