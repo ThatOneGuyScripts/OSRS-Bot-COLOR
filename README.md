@@ -18,7 +18,7 @@ https://www.youtube.com/watch?v=YkINXtjrYQw
 # Want to support me?
 [Buy ThatOneGuy a coffee](https://www.buymeacoffee.com/T1GScripts)
 
-#for multi-client support 
+# For multi-client support 
 Enable show display name in title!
 
 ![image](https://user-images.githubusercontent.com/125089137/228948670-4777c6a5-987c-4ed4-b0ee-45970b02d4c6.png)
