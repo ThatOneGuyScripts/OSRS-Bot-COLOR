@@ -1,11 +1,10 @@
 import math
 from typing import List, NamedTuple
-
 import cv2
 import mss
 import numpy as np
-
 import utilities.random_util as rd
+import utilities.BackGroundScreenCap as BCP
 
 Point = NamedTuple("Point", x=int, y=int)
 
@@ -77,7 +76,8 @@ class Rectangle:
         # with mss.mss() as sct:  # TODO: When MSS bug is fixed, reinstate this.
         global sct  # TODO: When MSS bug is fixed, remove this.
         monitor = self.to_dict()
-        res = np.array(sct.grab(monitor))[:, :, :3]
+        res = np.array(BCP.get_image())[:, :, :3]
+        cv2.imwrite("test screen.png",res)
         if self.subtract_list:
             for area in self.subtract_list:
                 res[

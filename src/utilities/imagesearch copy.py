@@ -1,6 +1,9 @@
 from pathlib import Path
 from typing import Union
+
+
 import cv2
+
 from utilities.geometry import Point, Rectangle
 
 # --- Paths to Image folders ---

@@ -6,11 +6,11 @@ the screenshotting/color manipulation here? It would allow each RL Object to be 
 with its Rectangle reference property.
 """
 from typing import List
-
 import cv2
 import numpy as np
 
 from utilities.geometry import Point, RuneLiteObject
+import utilities.BackGroundScreenCap as BCP
 
 
 def extract_objects(image: cv2.Mat) -> List[RuneLiteObject]:
