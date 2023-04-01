@@ -1,14 +1,14 @@
 import time
 from typing import List
-
+import utilities.api.item_ids as ids
 import utilities.color as clr
 from model.bot import BotStatus
-from model.near_reality.nr_bot import NRBot
-from utilities.api.status_socket import StatusSocket
+from model.osrs.osrs_bot import OSRSBot
+from utilities.api.morg_http_client import MorgHTTPSocket
 from utilities.geometry import Rectangle, RuneLiteObject
 
 
-class NRMining(NRBot):
+class OSRS_Mining(OSRSBot):
     def __init__(self):
         title = "Mining"
         description = (
@@ -16,7 +16,7 @@ class NRMining(NRBot):
             + "(Shift + Right-Click) the ones you want to mine."
         )
         super().__init__(bot_title=title, description=description)
-        self.running_time = 2
+        self.running_time = 360
         self.logout_on_friends = False
 
     def create_options(self):
@@ -39,49 +39,71 @@ class NRMining(NRBot):
         self.options_set = True
 
     def main_loop(self):  # sourcery skip: low-code-quality
-        # Setup
-        api = StatusSocket()
+        # SETUP
+        # api
+        api = MorgHTTPSocket()
+
+        # Constants
+        self.items_to_drop = [
+            ids.IRON_ORE,
+            ids.UNCUT_SAPPHIRE,
+            ids.UNCUT_EMERALD,
+            ids.UNCUT_RUBY,
+            ids.UNCUT_DIAMOND,
+        ]
+
+        # Variables
+        self.mined = 0
+        failed_searches = 0
 
         self.log_msg("Selecting inventory...")
         self.mouse.move_to(self.win.cp_tabs[3].random_point())
         self.mouse.click()
 
-        mined = 0
-        failed_searches = 0
+        # Drop all dropable items
+        self.drop(api.get_inv_item_indices(self.items_to_drop))
 
         # Main loop
         start_time = time.time()
         end_time = self.running_time * 60
         while time.time() - start_time < end_time:
             # Check to drop inventory
-            if api.get_is_inv_full():
-                self.drop_all()
-                time.sleep(1)
-                continue
+            self.__drop_some(api) #why are we dropping every loop?
 
             # Check to logout
             if self.logout_on_friends and self.friends_nearby():
                 self.__logout("Friends nearby. Logging out.")
 
             # Get the rocks
-            rocks: List[RuneLiteObject] = self.get_all_tagged_in_rect(self.win.game_view, clr.PINK)
+            iron_rocks: List[RuneLiteObject] = self.get_all_tagged_in_rect(
+                self.win.game_view,
+                clr.PINK,
+            )
             if not rocks:
                 failed_searches += 1
+                self.__drop_all(api)
                 if failed_searches > 5:
                     self.__logout("Failed to find a rock to mine. Logging out.")
                 time.sleep(1)
                 continue
+            failed_searches = 0
 
             # Whack the rock
-            failed_searches = 0
-            self.mouse.move_to(rocks[0].random_point(), mouseSpeed="fastest")
-            self.mouse.click()
+            rocks = sorted(iron_rocks, key=RuneLiteObject.distance_from_rect_center) #sorting list of rocks by distance from player
+            rock = rocks[0]
+            if not self.mouseover_text(contains="Iron"):
+                self.mouse.move_to(
+                    rock.random_point(),
+                    mouseSpeed="fastest",
+                )
+            if not self.mouse.click(check_red_click=True):
+                self.mouse.click()
+            if iron_rocks:
+                self.mouse.move_to(rock.random_point(), mouseSpeed="fastest")
+            if not api.get_is_player_idle():
+                api.wait_til_gained_xp(skill="Mining", timeout=3)
 
-            while not api.get_is_player_idle():
-                pass
-
-            mined += 1
-            self.log_msg(f"Rocks mined: {mined}")
+            self.log_msg(f"Rocks mined: {self.mined}")
 
             # Update progress
             self.update_progress((time.time() - start_time) / end_time)
@@ -93,3 +115,19 @@ class NRMining(NRBot):
         self.log_msg(msg)
         self.logout()
         self.stop()
+
+    def __drop_some(self, api: MorgHTTPSocket) -> None:
+        "drop some ore/gems using StatusSocket API"
+        slots = api.get_inv_item_indices(self.items_to_drop)
+        if len(slots) < 3:
+            return
+        if not api.get_is_player_idle():
+            api.wait_til_gained_xp(skill="Mining", timeout=2)
+        slots = slots[:3]
+        self.mined += 3
+        self.drop(slots)
+
+    def __drop_all(self, api: MorgHTTPSocket) -> None:
+        "drop some ore/gems using StatusSocket API"
+        slots = api.get_inv_item_indices(self.items_to_drop)
+        self.drop(slots)
