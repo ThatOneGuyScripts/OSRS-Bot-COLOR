@@ -77,7 +77,7 @@ class Rectangle:
         global sct  # TODO: When MSS bug is fixed, remove this.
         monitor = self.to_dict()
         res = np.array(BCP.get_image())[:, :, :3]
-        cv2.imwrite("test screen.png",res)
+        #cv2.imwrite("test screen.png",res) enable this line to check if background capture is working on client. 
         if self.subtract_list:
             for area in self.subtract_list:
                 res[
