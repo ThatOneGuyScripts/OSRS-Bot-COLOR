@@ -132,7 +132,7 @@ class Window:
         Returns a Rectangle outlining the entire client window.
         """
         if client := self.window:
-            return Rectangle(client.left, client.top, client.width, client.height)
+            return Rectangle(0, 0, client.width, client.height)
 
     def resize(self, width: int, height: int) -> None:
         """

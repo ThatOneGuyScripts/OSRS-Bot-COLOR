@@ -15,7 +15,6 @@ import utilities.BackGroundScreenCap as bcp
 
 
 
-
 class OSRSWoodcutter(OSRSBot):
     def __init__(self):
         bot_title = "Woodcutter"
