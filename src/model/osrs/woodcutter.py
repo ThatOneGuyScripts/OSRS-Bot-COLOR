@@ -9,6 +9,8 @@ from utilities.api.status_socket import StatusSocket
 from utilities.geometry import RuneLiteObject
 import utilities.ScreenToClient  as stc
 import utilities.RIOmouse as Mouse
+import utilities.BackGroundScreenCap as bcp
+
 
 
 
@@ -50,6 +52,7 @@ class OSRSWoodcutter(OSRSBot):
                 self.win.window_pid = self.pid_number
                 stc.window_title = self.win_name
                 Mouse.Mouse.clientpidSet = self.pid_number
+                bcp.window_title = self.win_name
             elif option == "Input":
                 self.Input = options[option]
                 if self.Input == ['Remote']:

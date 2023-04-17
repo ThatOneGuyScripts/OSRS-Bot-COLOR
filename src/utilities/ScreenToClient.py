@@ -1,6 +1,6 @@
 from utilities.WindowLocal import Window
 
-window_title = "Near-Reality"
+window_title = ""
 def screen_to_window(screen_x: int, screen_y: int) -> tuple:
     global window_title
     padding_top = 26 # replace with desired value
