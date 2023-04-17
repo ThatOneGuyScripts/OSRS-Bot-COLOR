@@ -48,6 +48,7 @@ class Rectangle:
                   (E.g., Bot.win.game_view).
         """
         self.reference_rect = rect
+        print(rect)
 
     @classmethod
     def from_points(cls, start_point: Point, end_point: Point):
@@ -67,24 +68,26 @@ class Rectangle:
             end_point.y - start_point.y,
         )
 
-    def screenshot(self) -> cv2.Mat:
+    def screenshot(self) -> np.ndarray:
         """
         Screenshots the Rectangle.
         Returns:
             A BGR Numpy array representing the captured image.
         """
-        # with mss.mss() as sct:  # TODO: When MSS bug is fixed, reinstate this.
-        global sct  # TODO: When MSS bug is fixed, remove this.
-        monitor = self.to_dict()
-        res = np.array(BCP.get_image())[:, :, :3]
-        #cv2.imwrite("test screen.png",res)
+        img = BCP.get_image()
+
+        # Crop the image to the specified Rectangle
+        img_cropped = img[self.top : self.top + self.height, self.left : self.left + self.width, :].copy()
+
+        # Subtract any areas specified in the subtract_list
         if self.subtract_list:
             for area in self.subtract_list:
-                res[
-                    area["top"] : area["top"] + area["height"],
-                    area["left"] : area["left"] + area["width"],
-                ] = 0
-        return res
+                area_left = area["left"] - self.left
+                area_top = area["top"] - self.top
+                area_right = area_left + area["width"]
+                area_bottom = area_top + area["height"]
+                img_cropped[area_top:area_bottom, area_left:area_right, :] = 0
+        return img_cropped
 
     def random_point(self, custom_seeds: List[List[int]] = None) -> Point:
         """

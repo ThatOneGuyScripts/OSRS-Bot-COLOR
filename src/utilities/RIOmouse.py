@@ -18,7 +18,7 @@ class Mouse:
     def __init__(self, clientpid, RemoteInputEnabled):
         self.RemoteInputEnabled = self.RemoteInputEnabledSet
         self.clientpid = self.clientpidSet
-        self.rio = RemoteIO(clientpid) #change pid here will need to find way to automatically get it in future
+        self.rio = RemoteIO(clientpid) 
         self.click_delay = True
     
     def do_nothing(self):

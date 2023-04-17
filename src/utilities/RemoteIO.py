@@ -2,10 +2,11 @@ import ctypes
 import os
 import time
 import utilities.random_util as rd
-#import random_util as rd
 import cv2
 import numpy as np
 import pyautogui as pag
+import platform
+
 
 
 class RemoteIO:
@@ -46,7 +47,9 @@ Focus Events
         self.PID = PID
         self.folder_name = "Plugins"
         self.folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), self.folder_name)
-        self.kinput_path = os.path.join(self.folder_path, "KInputCtrl.dll")
+        bitness = platform.architecture()[0]
+        dll_name = "KInputCtrl32.dll" if bitness == "32bit" else "KInputCtrl64.dll"
+        self.kinput_path = os.path.join(self.folder_path, dll_name)
         self.kinput = ctypes.cdll.LoadLibrary(self.kinput_path)
         self.CurX = 0
         self.CurY = 0
@@ -142,10 +145,11 @@ Focus Events
         
         
 #this is test code,
-#PID = 12372 #runelite pid goes here
+#PID = 27300 #runelite pid goes here
 # Create a RemoteIO instance for the target process
 #remote_io = RemoteIO(PID)
 
 # Send the key event
-##RemoteIO.click()
+#remote_io.send_key_event(400, 'A')
 #print("here")
+

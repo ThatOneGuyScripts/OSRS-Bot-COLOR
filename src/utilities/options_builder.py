@@ -2,6 +2,7 @@ from typing import Dict, List
 import customtkinter
 import psutil
 import platform
+from utilities.ClientKeyWords import Client_Names
 
 
 
@@ -116,15 +117,16 @@ class OptionsBuilder:
 
         processes = {}
         for proc in psutil.process_iter():
-            if 'Near' in proc.name():
-                name = proc.name()
-                pid = proc.pid
-                window_titles = get_window_title(pid)
-                for window_title in window_titles:
-                    if name in processes:
-                        processes[name].append((pid, window_title))
-                    else:
-                        processes[name] = [(pid, window_title)]
+            for client_name in Client_Names:
+                if client_name in proc.name():
+                    name = proc.name()
+                    pid = proc.pid
+                    window_titles = get_window_title(pid)
+                    for window_title in window_titles:
+                        if name in processes:
+                            processes[name].append((pid, window_title))
+                        else:
+                            processes[name] = [(pid, window_title)]
 
         process_info = []
         for name, pids in processes.items():

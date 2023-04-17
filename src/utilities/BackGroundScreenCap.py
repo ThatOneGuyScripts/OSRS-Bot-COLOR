@@ -2,9 +2,9 @@ import win32gui
 import win32ui
 import numpy as np
 from ctypes import windll
-
+window_title = None
 def get_image():
-    Window_Name = "Near-Reality"
+    Window_Name = window_title
     # Get the window handle
     hwnd = win32gui.FindWindow(None, Window_Name)
 

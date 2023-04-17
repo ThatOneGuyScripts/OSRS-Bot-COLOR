@@ -1,10 +1,9 @@
 import time
-
 import utilities.color as clr
 from model.bot import BotStatus
 from model.near_reality.nr_bot import NRBot
 from utilities.api.status_socket import StatusSocket
-
+import utilities.BackGroundScreenCap as bcp
 import utilities.ScreenToClient  as stc
 import utilities.RIOmouse as Mouse
 
@@ -46,6 +45,7 @@ class OSNRWoodcutting(NRBot):
                 self.win.window_pid = self.pid_number
                 stc.window_title = self.win_name
                 Mouse.Mouse.clientpidSet = self.pid_number
+                bcp.window_title = self.win_name
             elif option == "Input":
                 self.Input = options[option]
                 if self.Input == ['Remote']:
