@@ -21,7 +21,9 @@ class Mouse:
         self.rio = RemoteIO(clientpid) #change pid here will need to find way to automatically get it in future
         self.click_delay = True
     
-    
+    def do_nothing(self):
+        time.sleep(1)
+        
     def move_to(self, destination: tuple, **kwargs):
         if self.RemoteInputEnabled == True:
             print("we made it here true")

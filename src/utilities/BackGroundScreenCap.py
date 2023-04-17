@@ -4,7 +4,7 @@ import numpy as np
 from ctypes import windll
 
 def get_image():
-    Window_Name = "RuneLite"
+    Window_Name = "Near-Reality"
     # Get the window handle
     hwnd = win32gui.FindWindow(None, Window_Name)
 

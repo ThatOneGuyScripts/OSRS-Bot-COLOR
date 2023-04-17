@@ -2,6 +2,7 @@ import ctypes
 import os
 import time
 import utilities.random_util as rd
+#import random_util as rd
 import cv2
 import numpy as np
 import pyautogui as pag
@@ -141,11 +142,10 @@ Focus Events
         
         
 #this is test code,
-#PID = 29100 #runelite pid goes here
+#PID = 12372 #runelite pid goes here
 # Create a RemoteIO instance for the target process
 #remote_io = RemoteIO(PID)
 
 # Send the key event
-#remote_io.send_key_event(400, 'A')
+##RemoteIO.click()
 #print("here")
-

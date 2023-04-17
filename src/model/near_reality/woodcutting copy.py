@@ -67,14 +67,53 @@ class OSNRWoodcutting(NRBot):
         self.log_msg(f"{self.Input}")
         self.options_set = True
     def main_loop(self):  # sourcery skip: low-code-quality
-        
-      
+        # Setup API
+        api = StatusSocket()
+
+        self.log_msg("Selecting inventory...")
+        self.mouse.move_to(self.win.cp_tabs[3].random_point())
+        self.mouse.click()
+
+        logs = 0
+        failed_searches = 0
 
         # Main loop
         start_time = time.time()
         end_time = self.running_time * 60
         while time.time() - start_time < end_time:
-            self.mouse.do_nothing()
+            # If inventory is full
+            if api.get_is_inv_full():
+                self.drop_all(skip_slots=list(range(self.protect_slots)))
+                logs += 28 - self.protect_slots
+                self.log_msg(f"Logs cut: ~{logs}")
+                time.sleep(1)
+                continue
+
+
+            # Find a tree
+            tree = self.get_nearest_tag(clr.PINK)
+            if tree is None:
+                failed_searches += 1
+                if failed_searches > 10:
+                    self.__logout("No tagged trees found. Logging out.")
+                time.sleep(1)
+                continue
+
+            # Click tree and wait to start cutting
+            self.mouse.move_to(tree.random_point())
+            self.mouse.click()
+            time.sleep(5)
+
+            # Wait so long as the player is cutting
+            # -Could alternatively check the API for the player's idle status-
+            timer = 0
+            while not api.get_is_player_idle():
+                self.update_progress((time.time() - start_time) / end_time)
+                if timer % 6 == 0:
+                    self.log_msg("Chopping tree...")
+                time.sleep(2)
+                timer += 2
+            self.log_msg("Idle...")
 
             self.update_progress((time.time() - start_time) / end_time)
 

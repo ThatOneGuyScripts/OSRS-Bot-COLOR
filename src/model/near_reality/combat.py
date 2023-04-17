@@ -76,14 +76,6 @@ class NRCombat(NRBot):
         end_time = self.running_time * 60
         while time.time() - start_time < end_time:
             # loot
-            if not api.get_is_inv_full() and self.pick_up_loot("Cowhide"):
-                inv_count = len(api.get_inv())
-                self.log_msg("Looting...")
-                loot_timeout = 5  # wait up to 5 seconds to finish picking it up
-                while len(api.get_inv()) == inv_count and loot_timeout > 0:
-                    time.sleep(1)
-                    loot_timeout -= 1
-                time.sleep(0.5)
 
             # Try to attack an NPC
             timeout = 60  # check for up to 60 seconds

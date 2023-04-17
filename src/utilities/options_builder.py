@@ -116,7 +116,7 @@ class OptionsBuilder:
 
         processes = {}
         for proc in psutil.process_iter():
-            if 'Rune' in proc.name():
+            if 'Near' in proc.name():
                 name = proc.name()
                 pid = proc.pid
                 window_titles = get_window_title(pid)
