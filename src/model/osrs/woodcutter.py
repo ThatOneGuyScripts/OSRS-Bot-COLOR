@@ -77,11 +77,7 @@ class OSRSWoodcutter(OSRSBot):
         # Setup API
         api_m = MorgHTTPSocket()
         api_s = StatusSocket()
-        self.mouse.send_modifer_key(401,"shift")
-        self.mouse.send_arrow_key(401,"right")
-        time.sleep(0.1)
-        self.mouse.send_modifer_key(402,"shift")
-        self.mouse.send_arrow_key(402,"right")
+      
         self.log_msg("Selecting inventory...")
         self.mouse.move_to(self.win.cp_tabs[3].random_point())
         self.mouse.click()
